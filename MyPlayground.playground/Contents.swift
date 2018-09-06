@@ -36,21 +36,32 @@ struct Apartment {
     var buyPrice : Float
     var yearlyGrowth : Float
     var rentPrice : Float
-    var rentTax : Float
+    var rentTaxPercentage : Float
+    var rentTaxMonthly : Float
     
     func printInfo() {
-        print("Name: \(self.name)\n Address: \(self.address)\n ")
+        print("Name: \(self.name)\nAddress: \(self.address)\nYearly Rent Income: \(self.yearlyRentIncome())\nYealy Value Growth: \(yearlyValueGrowth())")
     }
     
     func priceInYears(_ years: Int) -> Float {
         let newPrice = (powf(yearlyGrowth + 1, Float(years))) * buyPrice
         return newPrice
     }
+    
+    func yearlyRentIncome() -> Float {
+        let totalRentPositive = (rentPrice - 2000) * 12.00
+        return totalRentPositive
+    }
+    
+    func yearlyValueGrowth() -> Float {
+        let newValue = self.priceInYears(1) - buyPrice
+        return newValue
+    }
 }
 
-var timos = Apartment(name: "1120", address: "13700 marina", buyPrice: 880000.00, yearlyGrowth: 0.1, rentPrice: 4500, rentTax: 0.4444)
-
-timos.priceInYears(3)
+var timos = Apartment(name: "1120", address: "13700 marina", buyPrice: 880000.00, yearlyGrowth: 0.06, rentPrice: 4500, rentTaxPercentage: 0.4, rentTaxMonthly: 2000)
+timos.printInfo()
+timos.priceInYears(1)
 
 
 
