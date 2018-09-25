@@ -8,14 +8,22 @@
 
 import SpriteKit
 
+enum GameState {
+    case title, ready, playing, gameOver
+}
+
 class GameScene: SKScene {
+    var state: GameState = .title
     var orangeTree: SKSpriteNode!
     var orange: Orange?
     var touchStart: CGPoint = .zero
     var shapeNode = SKShapeNode()
     var boundary = SKNode()
     var numOfLevels: UInt32 = 2
-    
+    var numberOfOranges = 0
+    var gameStateLabelNode: SKLabelNode!
+    var livesCountLabelNode: SKLabelNode!
+    var myLabel: SKLabelNode!
     // Class method to load .sks files
     static func Load(level: Int) -> GameScene? {
         return GameScene(fileNamed: "Level-\(level)")
@@ -24,7 +32,15 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         // Connect Game Objects
         orangeTree = childNode(withName: "tree") as! SKSpriteNode
+//        gameStateLabelNode = SKLabelNode(fileNamed: "gameStateLabel")
+//        gameStateLabelNode.text = "Game Over"
+        myLabel = SKLabelNode(fontNamed:"Chalkduster")
+        myLabel.text = String(numberOfOranges)
+        myLabel.fontSize = 45
+        myLabel.position = CGPoint(x:670, y:420)
         
+        self.addChild(myLabel)
+        livesCountLabelNode = SKLabelNode(fileNamed: "livesCountLabel")
         // Configure shapeNode
         shapeNode.lineWidth = 20
         shapeNode.lineCap = .round
@@ -108,6 +124,20 @@ class GameScene: SKScene {
         
         // Remove the path from shapeNode
         shapeNode.path = nil
+        
+        numberOfOranges += 1
+//        livesCountLabelNode.text = String(numberOfOranges)
+        myLabel.text = String(numberOfOranges)
+    }
+    override func update(_ currentTime: TimeInterval) {
+        if numberOfOranges == 3 {
+            state = .gameOver
+        }
+        if state == .gameOver {
+//            print(state)
+            
+//            livesCountLabelNode.isHidden = true
+        }
     }
 }
 extension GameScene: SKPhysicsContactDelegate {
