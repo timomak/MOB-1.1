@@ -8,6 +8,7 @@
 
 // TODO: Extension for random
 // TODO: Fix hue color
+// TODO: Class for labels
 
 import SpriteKit
 import GameplayKit
@@ -16,11 +17,14 @@ class GameScene: SKScene {
     var timer = Timer()
     var points = 0
     var pointsLabel = SKLabelNode()
+    public var isGameOver = false
     
     
     override func didMove(to view: SKView) {
-        generateBubbleIn()
-        setupPointsLabel()
+        if isGameOver == false {
+            generateBubbleIn()
+            setupPointsLabel()
+        }
     }
     
     // Set settings for label
@@ -126,7 +130,7 @@ class GameScene: SKScene {
             self.points -= 1
             self.updatePoints(points: self.points)
             
-            if self.isGameOver() {
+            if self.isGameOverFunc() {
                 self.handleGameOver(won: false)
             }
         }
@@ -137,12 +141,12 @@ class GameScene: SKScene {
     
     // Declare Game Over
     func handleGameOver(won: Bool) {
-//        let gameOverScene = GameOverScene(
-//            size: self.size,
-//            won: won
-//        )
-//
-//        self.view?.presentScene(gameOverScene)
+
+        let gameOverScene = GameOverScene(
+            size: self.size
+        )
+
+        self.view?.presentScene(gameOverScene)
         print("Game Over")
     }
     
@@ -174,7 +178,10 @@ class GameScene: SKScene {
     }
     
     // Check if game over
-    func isGameOver() -> Bool {
+    func isGameOverFunc() -> Bool {
+        // Stops all the functions
+        isGameOver = true
+        
         return points < 0
     }
     
