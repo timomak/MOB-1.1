@@ -8,7 +8,8 @@
 
 // TODO: Extension for random
 // TODO: Fix hue color
-// TODO: Class for labels
+// TODO: Class for labels and bubbles
+// TODO: 
 
 import SpriteKit
 import GameplayKit
@@ -18,9 +19,19 @@ class GameScene: SKScene {
     var points = 0
     var pointsLabel = SKLabelNode()
     public var isGameOver = false
+    var gameDifficultyIncrement_SpeedOfBubbleOverTime: Float = 4.0
+    let increasingDifficultyPeriod = TimeInterval(1)
     
     
     override func didMove(to view: SKView) {
+        Timer.scheduledTimer(withTimeInterval: increasingDifficultyPeriod,
+                             repeats: true)
+        { _ in
+            // increase gameDifficultyIncrement_SpeedOverTime property here
+            self.gameDifficultyIncrement_SpeedOfBubbleOverTime = (self.gameDifficultyIncrement_SpeedOfBubbleOverTime * 0.95)
+            print(self.gameDifficultyIncrement_SpeedOfBubbleOverTime)
+        }
+        
         if isGameOver == false {
             generateBubbleIn()
             setupPointsLabel()
@@ -54,7 +65,7 @@ class GameScene: SKScene {
     // Generate bubbles on a timer
     func generateBubbleIn() {
         
-        let timeInterval = TimeInterval(randomFloat(MIN: 2, MAX: 5))
+        var timeInterval = TimeInterval(1)
         
         timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: { _ in
             
@@ -69,11 +80,9 @@ class GameScene: SKScene {
     // Generate bubble at random position
     func generateBubble() -> SKShapeNode {
         guard let scene = scene else {fatalError()}
-        print("Generating new bubble")
         // Create bubble with Random size between 30 to 100
         let bubble = SKShapeNode(circleOfRadius: random(MIN: 30, MAX: 100))
         bubble.name = "Bubble"
-        print("Bubble name: \(bubble.name)")
         
         // Generate Random color
         let bubbleColor = UIColor(
@@ -84,7 +93,6 @@ class GameScene: SKScene {
         )
         
         bubble.fillColor = bubbleColor
-        print("Bubble color: ", bubble.fillColor)
         
         // The X position of the bubble
         // Start at a random x position
@@ -100,12 +108,9 @@ class GameScene: SKScene {
         let yPos = random(MIN: Int(leadingYPos), MAX: Int(trailingYPos))
         
         let bubblePoint = CGPoint(x: xPos, y: scene.frame.maxY + bubbleHalfHeight)
-        print("Bubble point: ", bubblePoint)
         let bubblePositionInScene = scene.convertPoint(toView: bubblePoint)
-        print("Bubble pos in scene: ", bubblePositionInScene)
         
         bubble.position = bubblePositionInScene
-        print("Bubble position: ", bubble.position)
         return bubble
     }
     
@@ -119,7 +124,7 @@ class GameScene: SKScene {
         
         let translateAction = SKAction.move (
             to: locationInScene,
-            duration: TimeInterval(randomFloat(MIN: 2.5, MAX: 4))
+            duration: TimeInterval(gameDifficultyIncrement_SpeedOfBubbleOverTime)
         )
         
         // remove bubble when it reaches the top
@@ -147,11 +152,10 @@ class GameScene: SKScene {
         )
 
         self.view?.presentScene(gameOverScene)
-        print("Game Over")
     }
     
     // Bubble touch
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {return}
         
         handleTouch(touch: touch)
@@ -171,7 +175,6 @@ class GameScene: SKScene {
         let positionInScene = touch.location(in: self)
         let touchedNode = self.atPoint(positionInScene)
         
-        print(touchedNode)
         guard touchedNode.name == "Bubble" else {return nil}
         
         return touchedNode
