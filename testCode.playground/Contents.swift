@@ -2,7 +2,20 @@
 
 import UIKit
 
-var str = "Hello, playground"
+func arraytoString(_ array: [String]) {
+    var string = ""
+    
+    for i in 0..<array.count {
+        string += array[i]
+        if array[i] != array.last {
+            string = addSpaces(string)
+        }
+    }
+    print(string)
+}
 
-var timos = [1,2]
-print(timos.count)
+func addSpaces(_ sentence: String) -> String {
+    return sentence + " "
+}
+
+arraytoString(["Swift", "is", "fun!"])
