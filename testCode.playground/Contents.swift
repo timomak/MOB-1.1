@@ -1,21 +1,32 @@
-//: Playground - noun: a place where people can play
+protocol CanMakeNoise {
+    func makeNoise()
+}
 
-import UIKit
-
-func arraytoString(_ array: [String]) {
-    var string = ""
-    
-    for i in 0..<array.count {
-        string += array[i]
-        if array[i] != array.last {
-            string = addSpaces(string)
-        }
+class Elephant: CanMakeNoise {
+    func makeNoise() {
+        print("meow")
     }
-    print(string)
 }
 
-func addSpaces(_ sentence: String) -> String {
-    return sentence + " "
+class Pig: CanMakeNoise {
+    func makeNoise() {
+        print("meow")
+    }
 }
 
-arraytoString(["Swift", "is", "fun!"])
+class Cow: CanMakeNoise {
+    func makeNoise() {
+        print("meow")
+    }
+}
+
+
+let elephant = Elephant()
+let pig = Pig()
+let cow = Cow()
+
+let arrayOfNoiseMaker: [CanMakeNoise] = [elephant, pig, cow]
+
+for i in arrayOfNoiseMaker {
+    i.makeNoise()
+}
